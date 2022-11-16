@@ -4,12 +4,14 @@ import { schema } from './schema'
 import hyper from './services/hyper'
 import createCore from './core/index'
 
-const core = createCore({ hyper: hyper(), features: { foo: true }, twillo: { send: () => null } })
 const app = express()
 
 app.use(express.json())
 
 app.use('/graphql', async (req, res) => {
+  // inject hyper into core env
+  const core = createCore({ hyper: await hyper() })
+
   const request = {
     body: req.body,
     headers: req.headers,

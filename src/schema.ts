@@ -100,7 +100,9 @@ const typeDefs = /* GraphQL */`
 
 const resolvers = {
   Query: {
-    products: () => [{ _id: '1', name: 'product 1' }, { _id: '2', name: 'product 2' }],
+    products: (_: any, x: any, ctx: any) => {
+      return ctx.product.query()
+    },
     offers: () => [{ _id: '1', name: 'offer 1', productId: '1' }, { _id: '2', name: 'offer 2', productId: '1' }]
   },
   Mutation: {
