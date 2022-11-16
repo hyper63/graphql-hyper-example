@@ -1,7 +1,10 @@
 import express, { RequestHandler } from 'express'
 import { getGraphQLParameters, processRequest, renderGraphiQL, shouldRenderGraphiQL, sendResult } from 'graphql-helix'
 import { schema } from './schema'
+import hyper from './services/hyper'
+import createCore from './core/index'
 
+const core = createCore({ hyper: hyper(), features: { foo: true }, twillo: { send: () => null } })
 const app = express()
 
 app.use(express.json())
@@ -23,8 +26,10 @@ app.use('/graphql', async (req, res) => {
       operationName,
       query,
       variables,
+      contextFactory: () => core,
       request,
-      schema
+      schema,
+
     })
 
     sendResult(result, res)
